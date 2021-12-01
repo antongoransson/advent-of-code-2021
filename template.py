@@ -11,8 +11,8 @@ def solve_part_2(in_data):
 
 
 def main():
-    with open('input.txt') as f:
-        in_data = map(int, re.findall(r'-?\d+', f))
+    with open('in.txt') as f:
+        in_data = map(int, re.findall(r'-?\d+', f.read()))
     sol1 = solve_part_1(in_data)
     print('Part 1: {}'.format(sol1))
     

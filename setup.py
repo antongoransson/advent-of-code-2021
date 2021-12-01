@@ -9,8 +9,6 @@ def run_day(d):
         ['mkdir', f'day{d}'], cwd='./', stdout=subprocess.PIPE)
     s = subprocess.call(
         ['cp', '../template.py', f'day{d}.py'], cwd=f'./day{d}', stdout=subprocess.PIPE)
-    a = subprocess.call(
-        ['touch', 'input.txt'], cwd=f'./day{d}', stdout=subprocess.PIPE)
     endtime = time.time()
     t = endtime - starttime
     return t
