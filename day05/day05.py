@@ -16,7 +16,7 @@ def solve(pipes, part_one):
             x1 = min(x1 + 1 , x2)
             y1 = min(y1 + 1 , y2) if y1 < y2 else max(y1 - 1 , y2)
             visited[x1, y1] +=1
-    return sum(1 for v in visited.values() if v >= 2)
+    return sum(v >= 2 for v in visited.values())
 
 
 
