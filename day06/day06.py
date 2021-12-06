@@ -3,21 +3,17 @@ import regex as re
 
 
 def solve(timers, n_days):
-    current_day = Counter(t for t in timers)
+    current_day = Counter(timers)
     for _ in range(n_days):
-        to_add = 0
         next_day = Counter()
-        for k in current_day:
-            prev_k = k
+        for k, v in current_day.items():
             k -= 1
             if k == -1:
                 k = 6
-                to_add += current_day[prev_k]
-            next_day[k] += current_day[prev_k]
-        if to_add > 0:
-            next_day[8] = to_add
+                next_day[8] += v
+            next_day[k] += v
         current_day = next_day
-    return sum(v for v in current_day.values())
+    return sum(current_day.values())
 
 
 def solve_part_1(timers):
