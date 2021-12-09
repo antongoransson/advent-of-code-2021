@@ -17,19 +17,16 @@ def solve_part_2(grid):
     low_points = [p for p in grid if (all(grid[p] < grid[n] for n in get_neighbours(grid, p)))]
     basins = []
     for lp in low_points:
-        basin = [lp]
-        visited = set(lp)
+        visited = set([lp])
         to_visit = [(lp, get_neighbours(grid, lp))]
         while to_visit:
             p, neighbours = to_visit.pop() 
             for n in neighbours:
                 if grid[n] != 9 and grid[n] > grid[p] and n not in visited:
                     visited.add(n)
-                    basin.append(n)
                     to_visit.append((n, get_neighbours(grid, n)))
-        basins.append(basin)
-    basins.sort(key=len, reverse=True)
-    return reduce(mul, [len(b) for b in basins[:3]])
+        basins.append(len(visited))
+    return reduce(mul, sorted(basins, reverse=True)[:3])
 
 
 def main():
