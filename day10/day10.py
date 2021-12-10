@@ -1,75 +1,60 @@
-from collections import defaultdict, Counter, deque
 from functools import reduce
-import regex as re
 
 scores_p1 = {
-    ')' : 3,
-    ']' : 57,
-    '}' : 1197,
-    '>' : 25137 
+    ')': 3,
+    ']': 57,
+    '}': 1197,
+    '>': 25137
 }
 scores_p2 = {
-    '(' : 1,
-    '[' : 2,
-    '{' : 3,
-    '<' : 4 
+    '(': 1,
+    '[': 2,
+    '{': 3,
+    '<': 4
 }
 matching_chars = {
-    '(' : ')',
-    '[' : ']',
-    '{' : '}',
-    '<' : '>' 
+    '(': ')',
+    '[': ']',
+    '{': '}',
+    '<': '>'
 }
+
+
+def calc(t, c):
+    return t * 5 + scores_p2[c]
+
 
 def is_matching_chars(open_c, closing_c):
     return matching_chars[open_c] == closing_c
 
+def test_chunks(line):
+    stack = list()
+    for c in line:
+        if c in '([{<':
+            stack.append(c)
+        else:
+            opening_c = stack.pop()
+            if not is_matching_chars(opening_c, c):
+                return [(scores_p1[c], False)]
+    return [(reduce(calc, stack[::-1], 0), True)]
+
+
 def solve_part_1(sub_system):
-    s = 0
-    for line in sub_system:
-        stack = list()
-        for c in line:
-            if c in '([{<':
-                stack.append(c)
-            else:
-                opening_c = stack.pop()
-                if not is_matching_chars(opening_c, c):
-                    s += scores_p1[c]
-                    break
-    return s
+    return sum(s for line in sub_system for s, ok in test_chunks(line) if not ok)
 
 def solve_part_2(sub_system):
-    valid_lines = []
-    for line in sub_system:
-        stack = list()
-        ok = True
-        for c in line:
-            if c in ('([{<'):
-                stack.append(c)
-            else:
-                opening_c = stack.pop()
-                if not is_matching_chars(opening_c, c):
-                    ok = False
-                    break
-        if ok:
-            valid_lines.append(stack)
-    line_scores = []
-    for line in valid_lines:
-        s = 0
-        for c in line[::-1]:
-            s = s * 5 + scores_p2[c]
-        line_scores.append(s)
-    line_scores.sort()
+    line_scores = sorted([s for line in sub_system for s, ok in test_chunks(line) if ok])
     return line_scores[(len(line_scores) // 2)]
+
 
 def main():
     with open('in.txt') as f:
         subsystem = [line.strip() for line in f]
     sol1 = solve_part_1(subsystem)
-    print('Part 1: {}'.format(sol1))
-    
+    print(f'Part 1: {sol1}')
+
     sol2 = solve_part_2(subsystem)
-    print('Part 2: {}'.format(sol2))
+    print(f'Part 2: {sol2}')
 
 
 if __name__ == "__main__":
