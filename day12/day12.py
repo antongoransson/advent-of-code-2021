@@ -1,24 +1,23 @@
-from collections import defaultdict, Counter
+from collections import defaultdict
 
 
-def dfs(p, visited, paths, is_part2):
+def dfs(p, visited, paths, is_part2, t):
     if p == 'end':
         return 1
-    if p.islower():
-        visited[p] += 1
-    t = max(visited.values()) if visited else 0
+    if not t and p in visited and p.islower():
+        t = True
+    visited.add(p)
     s = 0
     for n in paths[p]:
-        should_visit = visited[n] == 0 or t == 1 and is_part2 or n =='end'
-        if n != 'start' and (n.islower() and should_visit or n.isupper()):
-            s += dfs(n, Counter(visited), paths, is_part2)
+        if n.isupper() or n not in visited or not t and is_part2:
+            s += dfs(n, set(visited), paths, is_part2, t)
     return s
 
 def solve_part_1(paths):
-    return dfs('start', Counter(), paths, False)
+    return dfs('start', set(), paths, False, False)
 
 def solve_part_2(paths):
-    return dfs('start', Counter(), paths, True)
+    return dfs('start', set(), paths, True, False)
 
 
 
@@ -27,9 +26,11 @@ def main():
     with open('in.txt') as f:
         for line in f:
             start,end = line.strip().split('-')
-            paths[start].add(end)
-            paths[end].add(start)
-    print(paths)
+            if end != 'start' and start !='end':
+                paths[start].add(end)
+            if start != 'start' and end != 'end':
+                paths[end].add(start)
+            
     sol1 = solve_part_1(paths)
     print('Part 1: {}'.format(sol1))
     
