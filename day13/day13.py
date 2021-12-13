@@ -1,3 +1,8 @@
+import sys
+sys.path.append('..')
+import aoc
+
+
 def fold(f, grid):
     c, n = f
     new_grid = {}
@@ -7,7 +12,7 @@ def fold(f, grid):
             y = 2 * n - y
         elif c == 'x' and x > n:
             x = 2 * n - x
-        new_grid[(y, x)] = 1
+        new_grid[(y, x)] = True
     return new_grid
 
 
@@ -18,23 +23,14 @@ def solve_part_1(grid, folds):
 def solve_part_2(grid, folds):
     for f in folds:
         grid = fold(f, grid)
-    x = max(p[1] for p in grid)
-    y = max(p[0] for p in grid)
-    s = '\n'
-    for y in range(y + 1):
-        for x in range(x + 1):
-            if (y, x) in grid and grid[y, x]:
-                s += '#'
-            else:
-                s += '.'
-        s += '\n'
-    return s
+    return aoc.get_s_grid(grid)
 
 
 def main():
     grid = {}
     folds = []
-    with open('in.txt') as f:
+    in_f = sys.argv[1] if len(sys.argv) == 2 else 'in.txt'
+    with open(in_f) as f:
         for line in f:
             if 'fold' in line:
                 n = int(line.split('=')[1])
@@ -45,7 +41,7 @@ def main():
             else:
                 if line.strip():
                     x, y = map(int, line.strip().split(','))
-                    grid[y, x] = 1
+                    grid[y, x] = True
     sol1 = solve_part_1(grid, folds)
     print(f'Part 1: {sol1}')
 

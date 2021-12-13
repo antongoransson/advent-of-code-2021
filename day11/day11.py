@@ -1,10 +1,6 @@
-def get_neighbours(grid, p):
-    n = set()
-    for dx, dy in [(0, 1), (0, - 1), (1, 0), (-1, 0), (1, 1), (-1, - 1), (1, -1), (-1, 1)]:
-        if (p[0] + dx, p[1] + dy) in grid:
-            n.add((p[0] + dx, p[1] + dy))
-    return n
-
+import sys
+sys.path.append('..')
+import aoc
 
 def step(grid):
     to_flash = list()
@@ -16,7 +12,7 @@ def step(grid):
     while to_flash:
         p = to_flash.pop()
         has_flashed.add(p)
-        neigbours = get_neighbours(grid, p)
+        neigbours = aoc.neighbours(grid, p, diag=True)
         for n in neigbours:
             grid[n] += 1
             if grid[n] == 10:

@@ -3,10 +3,11 @@ import time
 import subprocess
 
 
-def run_day(d):
+def run_day(d, in_f = 'in.txt'):
     starttime = time.time()
+    print(in_f)
     p = subprocess.Popen(
-        ['python', f'day{d}.py'], cwd=f'./day{d}', stdout=subprocess.PIPE)
+        ['python', f'day{d}.py', f'{in_f}'], cwd=f'./day{d}', stdout=subprocess.PIPE)
     result = p.stdout.read().decode('utf-8')
     endtime = time.time()
     t = endtime - starttime
@@ -24,6 +25,12 @@ def main():
     if len(sys.argv) == 2:
         d = int(sys.argv[1])
         result, t = run_day('0' * (d < 10) + str(d))
+        print_result(d, result, t)
+        return
+    elif len(sys.argv) == 3:
+        d = int(sys.argv[1])
+        in_f = sys.argv[2]
+        result, t = run_day('0' * (d < 10) + str(d), in_f)
         print_result(d, result, t)
         return
     start_t = time.time()

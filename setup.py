@@ -10,7 +10,7 @@ def run_day(d):
     s = subprocess.call(
         ['cp', '../template.py', f'day{d}.py'], cwd=f'./day{d}', stdout=subprocess.PIPE)
     a = subprocess.call(
-        ['touch', 'example.txt'], cwd=f'./day{d}', stdout=subprocess.PIPE)
+        ['touch', 'ex.txt'], cwd=f'./day{d}', stdout=subprocess.PIPE)
     endtime = time.time()
     t = endtime - starttime
     return t

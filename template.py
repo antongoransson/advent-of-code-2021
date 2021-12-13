@@ -1,6 +1,8 @@
 from collections import defaultdict
 import regex as re
-
+import sys
+sys.path.append('..')
+import aoc
 
 def solve_part_1(in_data):
     pass
@@ -11,8 +13,9 @@ def solve_part_2(in_data):
 
 
 def main():
-    with open('in.txt') as f:
-        in_data = map(int, re.findall(r'-?\d+', f.read()))
+    in_f = sys.argv[1] if len(sys.argv) == 2 else 'in.txt'
+    with open(in_f) as f:
+        in_data = aoc.get_ints(f.read())
     sol1 = solve_part_1(in_data)
     print(f'Part 1: {sol1}')
     
