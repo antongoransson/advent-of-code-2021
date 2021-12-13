@@ -1,6 +1,3 @@
-import regex as re
-
-
 def fold(f, grid):
     c, n = f
     new_grid = {}
