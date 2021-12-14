@@ -5,7 +5,6 @@ import subprocess
 
 def run_day(d, in_f = 'in.txt'):
     starttime = time.time()
-    print(in_f)
     p = subprocess.Popen(
         ['python', f'day{d}.py', f'{in_f}'], cwd=f'./day{d}', stdout=subprocess.PIPE)
     result = p.stdout.read().decode('utf-8')
