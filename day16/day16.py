@@ -13,15 +13,16 @@ def get_f(type_id):
         assert False
 
 
-def read_subpacket_length(b, v, i, f, vs):
+def read_subpacket_length(b, i, f, vs):
     l_sp = int(b[i: i + 15], 2)
     i += 15
     lx = 0
+    v = None
     while lx != l_sp:
         v_p, l_packet = read_packet(b[i:], vs)
         lx += l_packet
         i += l_packet
-        v = f(v_p, v)
+        v = v_p if v is None else f(v, v_p)
     return v, i
 
 
@@ -34,13 +35,14 @@ def get_value(b, i):
             return int(n, 2), i
 
 
-def read_n_subpackets(b, v, i, f, vs):
+def read_n_subpackets(b, i, f, vs):
     ln = int(b[i: i + 11], 2)
     i += 11
-    for _ in range(ln):
+    v = None
+    for _ in range(0, ln):
         v_p, l_packet = read_packet(b[i:], vs)
         i += l_packet
-        v = f(v_p, v)
+        v = v_p if v is None else f(v, v_p)
     return v, i
 
 
@@ -52,27 +54,11 @@ def read_packet(b, vs=[]):
     i += 6
     if type_id == 4:
         return get_value(b, i)
-    else:
-        lt_id = int(b[i], 2)
-        i += 1
-        if type_id in (0, 1):
-            f = add if type_id == 0 else mul
-            v = 0 if type_id == 0 else 1
-            r_f = read_subpacket_length if lt_id == 0 else read_n_subpackets
-            return r_f(b, v, i, f, vs)
-        elif type_id in (2, 3):
-            f = min if type_id == 2 else max
-            v = 9999999999999999 if type_id == 2 else -1
-            r_f = read_subpacket_length if lt_id == 0 else read_n_subpackets
-            return r_f(b, v, i, f, vs)
-        else:
-            f = get_f(type_id)
-            i += 15 if lt_id == 0 else 11
-            v1, l_packet1 = read_packet(b[i:], vs)
-            i += l_packet1
-            v2, l_packet2 = read_packet(b[i:], vs)
-            i += l_packet2
-            return f(v1, v2), i
+    lt_id = int(b[i], 2)
+    i += 1
+    f = [add, mul, min, max, get_value, gt, lt ,eq][type_id]
+    r_f = read_subpacket_length if lt_id == 0 else read_n_subpackets
+    return r_f(b, i, f, vs)
 
 
 def solve_part_1(b):
